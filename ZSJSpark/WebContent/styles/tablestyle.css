@@ -1,0 +1,36 @@
+.twidth{
+    width: 50%;
+    height: 48px;
+    line-height: 48px;
+    float:left;
+}
+.leftwidth{
+    width: 62px;
+    background-color:#b6d6fa
+}
+.rightwidth{
+    width: 68px;
+    background-color:#b6d6fa
+}
+.twidth td{
+    background-color: #e3e3e3;
+}
+.table-bordered>tbody>tr>td,
+.table-bordered>thead>tr>th{
+    border: 1px solid white;
+}
+.twidth>thead>tr>th{
+    line-height: 50px;
+    width: 35px;
+    text-align: center;
+}
+table.table {
+    clear:none;
+    margin-bottom: 0px !important;
+}
+#HBox th{
+	text-align: center;
+	background: #b6d6fa;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}

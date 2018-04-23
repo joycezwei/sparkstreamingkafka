@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>控制中心</title>
+  <link href="styles/bootstrap.min.css" rel="stylesheet">
+  <link href="styles/bootstrap-reset.css" rel="stylesheet">
+  <link href="styles/jquery-ui-1.10.3.css" rel="stylesheet">
+  <link href="styles/font-awesome.min.css" rel="stylesheet">
+  <link href="styles/bootstrap-addtabs.css" rel="stylesheet" media="screen"/>
+  <link href="styles/style.css" rel="stylesheet">
+  <link href="styles/style-responsive.css" rel="stylesheet">
+  <style>
+	@media (min-width:992px) and (max-width:1287px){
+		#sum_box h4{
+			font-size:16px;
+			font-weight:bolder;
+		}
+	}
+	#sum_box .icon{font-size:55px;}
+</style>
+</head>
+<body class="sticky-header left-side-collapsed">
+<header class="topbar admin-header">
+<section>
+	<div class="left-side sticky-left-side" tabindex="5000" style="outline: none;">
+	    <a class="toggle-btn menu-collapsed"><i class="fa fa-bars"></i></a>
+	    <div class="left-side-inner" role="group" aria-label="...">
+	        <ul id="nav" class="nav nav-pills nav-stacked custom-nav">
+	           <li class="nav-active"><a href=""><i class="fa fa-home fa-2x"></i></a></li>
+	        </ul>
+	    </div>
+	</div>
+	<div class="header-section">
+            <div class="navbar navbar-duomi navbar-static-top" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+			            <a class="navbar-brand" href="#" id="logo">沙塔云服</a>
+			        </div>
+			        <div class="menu-right">
+			            <ul class="notification-menu" style="margin-bottom:0px;margin-top:10px;">
+			            	<li><a class="btn btn-default dropdown-toggle info-number" id="full"><i class="glyphicon glyphicon-fullscreen"></i>&nbsp;全屏</a></li>
+			            	<div class="clearfix"></div>
+			            </ul>
+		           </div>
+                </div>
+            </div>
+        </div>    
+    <!-- main content start-->
+    <div class="main-content" style="position: fixed;width: 97%;">
+        <!--body wrapper start-->
+        <div class="wrapper">
+            <div id="tabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active workpanl1">
+                        <a href="#home" aria-controls="home" role="tab" data-toggle="tab" id="myhome">工作台</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                   <div role="tabpanel" class="tab-pane active" id="home">
+                        <div class="page-content">
+                            <div id="tab-general">
+                                <div id="sum_box" class="row mbl">
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--         <footer> -->
+<!--                 2014 © AdminEx by <a href=""></a> -->
+<!--         </footer> -->
+    </div>
+    <!-- main content end-->
+</section>
+</header>
+</div>>
+<!-- Placed js at the end of the document so the pages load faster -->
+<script src="script/jquery-1.11.2.min.js"></script>
+<script src="script/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="script/jquery-migrate-1.2.1.min.js"></script>
+<script src="script/bootstrap.min.js"></script>
+<script src="script/modernizr.min.js"></script>
+<script src="script/jquery.nicescroll.js"></script>
+<script src="script/bootstrap-addtabs.js"></script>
+<script src="script/zsjspark/fullScreen.js"></script>
+<script src="script/zsjspark/index.js"></script>
+</body>
+</html>

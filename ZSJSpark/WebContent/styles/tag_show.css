@@ -1,0 +1,46 @@
+header{
+	margin:0;
+	padding:0; 
+	background:none;
+	box-shadow:none;
+	-webkit-box-shadow:none;
+	text-shadow:none;
+}
+header a{
+	color:black;
+}
+.mb1{
+	background:#eff0f4;
+}
+.tg_icon{
+	float:right;
+	width:50px;
+	line-height:35px;
+}
+#sum_box .icon {
+    color: rgb(74, 74, 74);
+    margin-top: 0px;
+    margin-bottom: 0px;
+    float: none;
+    text-align: center;
+}
+.panel-body {
+    padding: 10px 15px 0 15px;
+}
+.panel-body1 {
+    padding: 0;
+}
+.panel{
+	border-radius:5px !important;
+	margin-right:3px;
+	border:none;
+}
+.btn{
+	float:right;
+}
+/* .row{ */
+/* 	padding:10px 15px 0 15px; */
+/* } */
+.mbl {
+    padding: 10px 15px 0 15px;
+}

@@ -1,0 +1,26 @@
+.progressbar{
+	padding: 0 15px;
+}
+.title{
+	display: inline-block;
+	width: 85px;
+	float: left;
+}
+.timeline{
+	margin: -15px 0 5px 0;
+    padding: 0 15px;
+}
+.times{
+	float: left;
+}
+.time_span{
+	display: inline-block;
+	/* width: 60.8px;
+	min-width: 6.78%; */
+	/* min-width:60.8px;
+	max-width: 95.45px; */
+}
+.col-sm-5{
+	padding-left:0px;
+	padding-right:0px;
+}
