@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.st.zsjspark.mapper.MachineMapper">
+	<resultMap id="machineRM" type="Machine">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="OPCSERVER_ID" property="opcserverId" jdbcType="INTEGER" />
+		<result column="MACHINE_CODE" property="machineCode" jdbcType="VARCHAR" />
+		<result column="MACHINE_NAME" property="machineName" jdbcType="VARCHAR" />
+		<result column="MACHINE_TYPE" property="machineType" jdbcType="VARCHAR" />
+		<result column="MACHINE_MODEL" property="machineModel" jdbcType="INTEGER" />
+		<result column="IP" property="ip" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="MAC" property="mac" jdbcType="VARCHAR" />
+		<result column="DESCRIBE_" property="describe" jdbcType="VARCHAR" />
+		<result column="CONTROL_COMPANY" property="controlCompany"
+			jdbcType="VARCHAR" />
+		<result column="VERSION" property="version" jdbcType="VARCHAR" />
+		<result column="COMPANY" property="company" jdbcType="VARCHAR" />
+		<result column="DATE_MANUFACTURE" property="dateManufacture"
+			jdbcType="BIGINT" />
+		<result column="DATE_PURCHASE" property="datePurchase"
+			jdbcType="BIGINT" />
+		<result column="LOCATION" property="location" jdbcType="VARCHAR" />
+		<result column="WORKSET" property="workset" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="BIGINT" />
+		<result column="CHANGED_DATE" property="changedDate" jdbcType="BIGINT" />
+		<result column="DELETE_DATE" property="deleteDate" jdbcType="BIGINT" />
+		<result column="CREATE_PEOPLE" property="createPeople"
+			jdbcType="INTEGER" />
+		<result column="CHANGE_PEOPLE" property="changePeople"
+			jdbcType="INTEGER" />
+		<result column="DELETE_PEOPLE" property="deletePeople"
+			jdbcType="INTEGER" />
+		<result column="EXTEND" property="extend" jdbcType="VARCHAR" />
+		<result column="EXTEND1" property="extend1" jdbcType="VARCHAR" />
+		<collection property="groupList" ofType="Group">
+			<id column="GROUP_ID" property="groupId" jdbcType="INTEGER" />
+			<result column="GROUP_NAME" property="groupName" jdbcType="VARCHAR" />
+			<result column="CREATE_PEOPLE" property="createPeople"
+				jdbcType="INTEGER" />
+			<result column="CHANGED_DATE" property="changedDate" jdbcType="BIGINT" />
+			<result column="CHANGE_PEOPLE" property="changePeople"
+				jdbcType="INTEGER" />
+			<result column="CREATE_DATE" property="createDate" jdbcType="BIGINT" />
+			<result column="STATUS" property="status" jdbcType="INTEGER" />
+			<result column="DELETE_DATE" property="deleteDate" jdbcType="BIGINT" />
+			<result column="DELETE_PEOPLE" property="deletePeople"
+				jdbcType="INTEGER" />
+			<collection property="items" ofType="Item">
+				<id column="ITEM_ID" property="itemId" jdbcType="INTEGER" />
+				<result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+				<result column="PARAMETER_NAME" property="parameterName"
+					jdbcType="VARCHAR" />
+				<result column="GROUP_ID" property="groupId" jdbcType="INTEGER" />
+				<result column="CREATE_PEOPLE" property="createPeople"
+					jdbcType="INTEGER" />
+				<result column="CHANGED_DATE" property="changedDate"
+					jdbcType="BIGINT" />
+				<result column="CHANGE_PEOPLE" property="changePeople"
+					jdbcType="INTEGER" />
+				<result column="CREATE_DATE" property="createDate" jdbcType="BIGINT" />
+				<result column="STATUS" property="status" jdbcType="INTEGER" />
+				<result column="DELETE_DATE" property="deleteDate" jdbcType="BIGINT" />
+				<result column="DELETE_PEOPLE" property="deletePeople"
+					jdbcType="INTEGER" />
+			</collection>
+		</collection> 
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		m.ID, OPCSERVER_ID, MACHINE_CODE, MACHINE_NAME, MACHINE_TYPE,
+		MACHINE_MODEL, IP, m.STATUS,
+		MAC, DESCRIBE_, CONTROL_COMPANY,
+		COMPANY, DATE_MANUFACTURE, m.VERSION,
+		DATE_PURCHASE,
+		LOCATION,WORKSET,
+		CREATE_DATE, CHANGED_DATE, DELETE_DATE, CREATE_PEOPLE,
+		CHANGE_PEOPLE,
+		DELETE_PEOPLE,s.VERSION EXTEND,w.WORKSHOPNAME EXTEND1
+	</sql>
+
+	<select id="getStatus" resultType="map">
+		select
+		COUNT(r.CONNECTION_STATUS) allm,
+		COUNT(case when r.CONNECTION_STATUS=0 then 0 end) ncm,
+		COUNT(case when r.CONNECTION_STATUS=1 then 1 end) cm
+		from realtime_status r
+	</select>
+	
+	<!-- 根据条件查询 -->
+	<select id="findMachine" parameterType="map" resultMap="machineRM">
+		select m.* from machine m,softversion s,workshop w where m.`STATUS` != 0 and m.VERSION = s.ID and m.workset = w.ID
+	</select>
+	
+	<select id="findByMachine" resultMap="machineRM" parameterType="java.lang.Integer">
+		SELECT * FROM `group`, machine m, machine_group, item
+		WHERE	
+		machine_group.MACHINE_CODE = machine.MACHINE_CODE
+		AND machine_group.GROUP_ID = `group`.GROUP_ID
+		AND `group`.GROUP_ID = item.GROUP_ID
+		AND item.`STATUS` = 1
+		AND `group`.`STATUS` = 1
+		AND machine.`STATUS` > 0
+		AND machine_group.`STATUS` > 0
+		AND machine.VERSION = item.VERSION
+		<if test="id != null">
+			and machine.ID=#{id,jdbcType=INTEGER}
+		</if>
+		<if test="machineCode != null">
+			and machine.MACHINE_CODE = #{machineCode,jdbcType=VARCHAR}
+		</if>
+		<if test="machineName != null">
+			and	machine.MACHINE_NAME = #{machineName,jdbcType=VARCHAR}
+		</if>
+		<if test="machineType != null">
+			and	machine.MACHINE_TYPE = #{machineType,jdbcType=VARCHAR}
+		</if>
+		<if test="machineModel != null">
+			and	machine.MACHINE_MODEL = #{machineModel,jdbcType=INTEGER}
+		</if>
+		<if test="ip != null">
+			and	machine.IP = #{ip,jdbcType=VARCHAR}
+		</if>
+		<if test="mac != null">
+			and	machine.MAC = #{mac,jdbcType=VARCHAR}
+		</if>
+		<if test="describe != null">
+			and	machine.DESCRIBE_ = #{describe,jdbcType=VARCHAR}
+		</if>
+		<if test="controlCompany != null">
+			and	machine.CONTROL_COMPANY = #{controlCompany,jdbcType=VARCHAR}
+		</if>
+		<if test="version != null">
+			and	machine.VERSION = #{version,jdbcType=VARCHAR}
+		</if>
+		<if test="company != null">
+			and	machine.COMPANY = #{company,jdbcType=VARCHAR}
+		</if>
+		<if test="dateManufacture != null">
+			and	machine.DATE_MANUFACTURE = #{dateManufacture,jdbcType=BIGINT}
+		</if>
+		<if test="datePurchase != null">
+			and	machine.DATE_PURCHASE = #{datePurchase,jdbcType=BIGINT}
+		</if>
+		<if test="location != null">
+			and	machine.LOCATION = #{location,jdbcType=VARCHAR}
+		</if>
+		<if test="workset != null">
+			and	machine.WORKSET = #{workset,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null">
+			and	machine.CREATE_DATE = #{createDate,jdbcType=BIGINT}
+		</if>
+		<if test="changedDate != null">
+			and	machine.CHANGED_DATE = #{changedDate,jdbcType=BIGINT}
+		</if>
+		<if test="deleteDate != null">
+			and	machine.DELETE_DATE = #{deleteDate,jdbcType=BIGINT}
+		</if>
+		<if test="createPeople != null">
+			and	machine.CREATE_PEOPLE = #{createPeople,jdbcType=INTEGER}
+		</if>
+		<if test="changePeople != null">
+			and	machine.CHANGE_PEOPLE = #{changePeople,jdbcType=INTEGER}
+		</if>
+		<if test="deletePeople != null">
+			and	machine.DELETE_PEOPLE = #{deletePeople,jdbcType=INTEGER}
+		</if>
+		<if test="extend != null">
+			and	machine.EXTEND = #{extend,jdbcType=VARCHAR}
+		</if>
+		<if test="extend1 != null">
+			and	machine.EXTEND1 = #{extend1,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			and	machine.STATUS = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+
+	</select>
+
+	<select id="findById" resultMap="machineRM" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from machine
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据条件查询 -->
+	<select id="findByCondition" parameterType="map" resultMap="machineRM">
+		select <include refid="Base_Column_List" /> from machine m,softversion s,workshop w where m.STATUS != 0 and m.VERSION = s.ID and m.workset = w.ID
+		<if test="id != null">
+			and ID=#{id,jdbcType=INTEGER}
+		</if>
+		<if test="machineCode != null">
+			and	MACHINE_CODE = #{machineCode,jdbcType=VARCHAR}
+		</if>
+		<if test="machineName != null">
+			and	MACHINE_NAME = #{machineName,jdbcType=VARCHAR}
+		</if>
+		<if test="machineType != null">
+			and	MACHINE_TYPE = #{machineType,jdbcType=VARCHAR}
+		</if>
+		<if test="machineModel != null">
+			and	MACHINE_MODEL = #{machineModel,jdbcType=INTEGER}
+		</if>
+		<if test="ip != null">
+			and	IP = #{ip,jdbcType=VARCHAR}
+		</if>
+		<if test="mac != null">
+			and	MAC = #{mac,jdbcType=VARCHAR}
+		</if>
+		<if test="describe != null">
+			and	DESCRIBE_ = #{describe,jdbcType=VARCHAR}
+		</if>
+		<if test="controlCompany != null">
+			and	CONTROL_COMPANY = #{controlCompany,jdbcType=VARCHAR}
+		</if>
+		<if test="version != null">
+			and	VERSION = #{version,jdbcType=VARCHAR}
+		</if>
+		<if test="company != null">
+			and	COMPANY = #{company,jdbcType=VARCHAR}
+		</if>
+		<if test="dateManufacture != null">
+			and	DATE_MANUFACTURE = #{dateManufacture,jdbcType=BIGINT}
+		</if>
+		<if test="datePurchase != null">
+			and	DATE_PURCHASE = #{datePurchase,jdbcType=BIGINT}
+		</if>
+		<if test="location != null">
+			and	LOCATION = #{location,jdbcType=VARCHAR}
+		</if>
+		<if test="workset != null">
+			and	WORKSET = #{workset,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null">
+			and	CREATE_DATE = #{createDate,jdbcType=BIGINT}
+		</if>
+		<if test="changedDate != null">
+			and	CHANGED_DATE = #{changedDate,jdbcType=BIGINT}
+		</if>
+		<if test="deleteDate != null">
+			and	DELETE_DATE = #{deleteDate,jdbcType=BIGINT}
+		</if>
+		<if test="createPeople != null">
+			and	CREATE_PEOPLE = #{createPeople,jdbcType=INTEGER}
+		</if>
+		<if test="changePeople != null">
+			and	CHANGE_PEOPLE = #{changePeople,jdbcType=INTEGER}
+		</if>
+		<if test="deletePeople != null">
+			and	DELETE_PEOPLE = #{deletePeople,jdbcType=INTEGER}
+		</if>
+		<if test="extend != null">
+			and	EXTEND = #{extend,jdbcType=VARCHAR}
+		</if>
+		<if test="extend1 != null">
+			and	EXTEND1 = #{extend1,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			and	STATUS = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+		order by CREATE_DATE desc
+	</select>
+	
+	<select id="findByStatus" parameterType="map" resultMap="machineRM">
+		select * from machine m where STATUS != 0
+		<if test="id != null">
+			and ID=#{id,jdbcType=INTEGER}
+		</if>
+		<if test="machineCode != null">
+			and	MACHINE_CODE = #{machineCode,jdbcType=VARCHAR}
+		</if>
+		<if test="machineName != null">
+			and	MACHINE_NAME = #{machineName,jdbcType=VARCHAR}
+		</if>
+		<if test="machineType != null">
+			and	MACHINE_TYPE = #{machineType,jdbcType=VARCHAR}
+		</if>
+		<if test="machineModel != null">
+			and	MACHINE_MODEL = #{machineModel,jdbcType=INTEGER}
+		</if>
+		<if test="ip != null">
+			and	IP = #{ip,jdbcType=VARCHAR}
+		</if>
+		<if test="mac != null">
+			and	MAC = #{mac,jdbcType=VARCHAR}
+		</if>
+		<if test="describe != null">
+			and	DESCRIBE_ = #{describe,jdbcType=VARCHAR}
+		</if>
+		<if test="controlCompany != null">
+			and	CONTROL_COMPANY = #{controlCompany,jdbcType=VARCHAR}
+		</if>
+		<if test="version != null">
+			and	VERSION = #{version,jdbcType=VARCHAR}
+		</if>
+		<if test="company != null">
+			and	COMPANY = #{company,jdbcType=VARCHAR}
+		</if>
+		<if test="dateManufacture != null">
+			and	DATE_MANUFACTURE = #{dateManufacture,jdbcType=BIGINT}
+		</if>
+		<if test="datePurchase != null">
+			and	DATE_PURCHASE = #{datePurchase,jdbcType=BIGINT}
+		</if>
+		<if test="location != null">
+			and	LOCATION = #{location,jdbcType=VARCHAR}
+		</if>
+		<if test="workset != null">
+			and	WORKSET = #{workset,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null">
+			and	CREATE_DATE = #{createDate,jdbcType=BIGINT}
+		</if>
+		<if test="changedDate != null">
+			and	CHANGED_DATE = #{changedDate,jdbcType=BIGINT}
+		</if>
+		<if test="deleteDate != null">
+			and	DELETE_DATE = #{deleteDate,jdbcType=BIGINT}
+		</if>
+		<if test="createPeople != null">
+			and	CREATE_PEOPLE = #{createPeople,jdbcType=INTEGER}
+		</if>
+		<if test="changePeople != null">
+			and	CHANGE_PEOPLE = #{changePeople,jdbcType=INTEGER}
+		</if>
+		<if test="deletePeople != null">
+			and	DELETE_PEOPLE = #{deletePeople,jdbcType=INTEGER}
+		</if>
+		<if test="extend != null">
+			and	EXTEND = #{extend,jdbcType=VARCHAR}
+		</if>
+		<if test="extend1 != null">
+			and	EXTEND1 = #{extend1,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			and	STATUS = #{status,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<insert id="insert" parameterType="Machine">
+		insert into machine
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="opcserverId != null">
+				OPCSERVER_ID,
+			</if>
+			<if test="machineCode != null">
+				MACHINE_CODE,
+			</if>
+			<if test="machineName != null">
+				MACHINE_NAME,
+			</if>
+			<if test="machineType != null">
+				MACHINE_TYPE,
+			</if>
+			<if test="machineModel != null">
+				MACHINE_MODEL,
+			</if>
+			<if test="ip != null">
+				IP,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="mac != null">
+				MAC,
+			</if>
+			<if test="describe != null">
+				DESCRIBE_,
+			</if>
+			<if test="controlCompany != null">
+				CONTROL_COMPANY,
+			</if>
+			<if test="version != null">
+				VERSION,
+			</if>
+			<if test="company != null">
+				COMPANY,
+			</if>
+			<if test="dateManufacture != null">
+				DATE_MANUFACTURE,
+			</if>
+			<if test="datePurchase != null">
+				DATE_PURCHASE,
+			</if>
+			<if test="location != null">
+				LOCATION,
+			</if>
+			<if test="workset != null">
+				WORKSET,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="changedDate != null">
+				CHANGED_DATE,
+			</if>
+			<if test="deleteDate != null">
+				DELETE_DATE,
+			</if>
+			<if test="createPeople != null">
+				CREATE_PEOPLE,
+			</if>
+			<if test="changePeople != null">
+				CHANGE_PEOPLE,
+			</if>
+			<if test="deletePeople != null">
+				DELETE_PEOPLE,
+			</if>
+			<if test="extend != null">
+				EXTEND,
+			</if>
+			<if test="extend1 != null">
+				EXTEND1,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="opcserverId != null">
+				#{opcserverId,jdbcType=INTEGER},
+			</if>
+			<if test="machineCode != null">
+				#{machineCode,jdbcType=VARCHAR},
+			</if>
+			<if test="machineName != null">
+				#{machineName,jdbcType=VARCHAR},
+			</if>
+			<if test="machineType != null">
+				#{machineType,jdbcType=VARCHAR},
+			</if>
+			<if test="machineModel != null">
+				#{machineModel,jdbcType=INTEGER},
+			</if>
+			<if test="ip != null">
+				#{ip,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="mac != null">
+				#{mac,jdbcType=VARCHAR},
+			</if>
+			<if test="describe != null">
+				#{describe,jdbcType=VARCHAR},
+			</if>
+			<if test="controlCompany != null">
+				#{controlCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="version != null">
+				#{version,jdbcType=VARCHAR},
+			</if>
+			<if test="company != null">
+				#{company,jdbcType=VARCHAR},
+			</if>
+			<if test="dateManufacture != null">
+				#{dateManufacture,jdbcType=BIGINT},
+			</if>
+			<if test="datePurchase != null">
+				#{datePurchase,jdbcType=BIGINT},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="workset != null">
+				#{workset,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=BIGINT},
+			</if>
+			<if test="changedDate != null">
+				#{changedDate,jdbcType=BIGINT},
+			</if>
+			<if test="deleteDate != null">
+				#{deleteDate,jdbcType=BIGINT},
+			</if>
+			<if test="createPeople != null">
+				#{createPeople,jdbcType=INTEGER},
+			</if>
+			<if test="changePeople != null">
+				#{changePeople,jdbcType=INTEGER},
+			</if>
+			<if test="deletePeople != null">
+				#{deletePeople,jdbcType=INTEGER},
+			</if>
+			<if test="extend != null">
+				#{extend,jdbcType=VARCHAR},
+			</if>
+			<if test="extend1 != null">
+				#{extend1,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="Machine">
+		update machine
+		<set>
+			<if test="opcserverId != null">
+				OPCSERVER_ID = #{opcserverId,jdbcType=INTEGER},
+			</if>
+			<if test="machineCode != null">
+				MACHINE_CODE = #{machineCode,jdbcType=VARCHAR},
+			</if>
+			<if test="machineName != null">
+				MACHINE_NAME = #{machineName,jdbcType=VARCHAR},
+			</if>
+			<if test="machineType != null">
+				MACHINE_TYPE = #{machineType,jdbcType=VARCHAR},
+			</if>
+			<if test="machineModel != null">
+				MACHINE_MODEL = #{machineModel,jdbcType=INTEGER},
+			</if>
+			<if test="ip != null">
+				IP = #{ip,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="mac != null">
+				MAC = #{mac,jdbcType=VARCHAR},
+			</if>
+			<if test="describe != null">
+				DESCRIBE_ = #{describe,jdbcType=VARCHAR},
+			</if>
+			<if test="controlCompany != null">
+				CONTROL_COMPANY = #{controlCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="version != null">
+				VERSION = #{version,jdbcType=VARCHAR},
+			</if>
+			<if test="company != null">
+				COMPANY = #{company,jdbcType=VARCHAR},
+			</if>
+			<if test="dateManufacture != null">
+				DATE_MANUFACTURE = #{dateManufacture,jdbcType=BIGINT},
+			</if>
+			<if test="datePurchase != null">
+				DATE_PURCHASE = #{datePurchase,jdbcType=BIGINT},
+			</if>
+			<if test="location != null">
+				LOCATION = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="workset != null">
+				WORKSET = #{workset,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE = #{createDate,jdbcType=BIGINT},
+			</if>
+			<if test="changedDate != null">
+				CHANGED_DATE = #{changedDate,jdbcType=BIGINT},
+			</if>
+			<if test="deleteDate != null">
+				DELETE_DATE = #{deleteDate,jdbcType=BIGINT},
+			</if>
+			<if test="createPeople != null">
+				CREATE_PEOPLE = #{createPeople,jdbcType=INTEGER},
+			</if>
+			<if test="changePeople != null">
+				CHANGE_PEOPLE = #{changePeople,jdbcType=INTEGER},
+			</if>
+			<if test="deletePeople != null">
+				DELETE_PEOPLE = #{deletePeople,jdbcType=INTEGER},
+			</if>
+			<if test="extend != null">
+				EXTEND = #{extend,jdbcType=VARCHAR},
+			</if>
+			<if test="extend1 != null">
+				EXTEND1 = #{extend1,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="id != null">
+			where ID = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="ids != null">
+			where ID in 
+			<foreach collection="ids" item="id" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+	</update>
+	
+	<delete id="delete" parameterType="string">
+		delete from machine
+		where ID in
+		<foreach collection="array" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

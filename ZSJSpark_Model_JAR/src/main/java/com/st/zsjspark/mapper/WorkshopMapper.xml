@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.st.zsjspark.mapper.WorkshopMapper">
+	<resultMap id="workshopRM" type="Workshop">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="WORKSHOPNAME" property="workshopname" jdbcType="VARCHAR" />
+		<result column="WORKSHOPFZR" property="workshopfzr" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="WORKSHOPNUMS" property="workshopnums" jdbcType="INTEGER" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, WORKSHOPNAME, WORKSHOPFZR, PHONE, WORKSHOPNUMS, REMARK
+	</sql>
+	<select id="findById" resultMap="workshopRM" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from workshop
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据条件查询 -->
+	<select id="findByCondition" parameterType="map" resultMap="workshopRM">
+		select * from workshop where STATUS != 0
+		<if test="id != null">
+			and ID=#{id,jdbcType=INTEGER}
+		</if>
+		<if test="workshopname != null">
+			and	WORKSHOPNAME = #{workshopname,jdbcType=VARCHAR}
+		</if>
+		<if test="workshopfzr != null">
+			and	WORKSHOPFZR = #{workshopfzr,jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null">
+			and	PHONE = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="workshopnums != null">
+			and	WORKSHOPNUMS = #{workshopnums,jdbcType=VARCHAR}
+		</if>
+		<if test="remark != null">
+			and	REMARK = #{remark,jdbcType=VARCHAR}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+	</select>
+	
+	<delete id="delete" parameterType="string">
+		delete from workshop
+		where ID in
+		<foreach collection="array" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	<insert id="insert" parameterType="Workshop">
+		insert into workshop
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="workshopname != null">
+				WORKSHOPNAME,
+			</if>
+			<if test="workshopfzr != null">
+				WORKSHOPFZR,
+			</if>
+			<if test="phone != null">
+				PHONE,
+			</if>
+			<if test="workshopnums != null">
+				WORKSHOPNUMS,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="workshopname != null">
+				#{workshopname,jdbcType=VARCHAR},
+			</if>
+			<if test="workshopfzr != null">
+				#{workshopfzr,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="workshopnums != null">
+				#{workshopnums,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="Workshop">
+		update workshop
+		<set>
+			<if test="workshopname != null">
+				WORKSHOPNAME = #{workshopname,jdbcType=VARCHAR},
+			</if>
+			<if test="workshopfzr != null">
+				WORKSHOPFZR = #{workshopfzr,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				PHONE = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="workshopnums != null">
+				WORKSHOPNUMS = #{workshopnums,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		<if test="id != null">
+			where ID = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="ids != null">
+			where ID in 
+			<foreach collection="ids" item="id" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+	</update>
+</mapper>

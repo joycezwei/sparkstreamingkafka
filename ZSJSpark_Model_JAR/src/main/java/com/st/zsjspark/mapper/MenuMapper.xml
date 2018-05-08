@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.st.zsjspark.mapper.MenuMapper">
+	<resultMap id="menuRM" type="Menu">
+		<id column="MENUID" property="menuid" jdbcType="VARCHAR" />
+		<result column="MENUNAME" property="menuname" jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="PARENTMENU" property="parentmenu" jdbcType="VARCHAR" />
+		<result column="ICON" property="icon" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		MENUID, MENUNAME, URL, PARENTMENU, ICON, 
+		(CASE WHEN t.MENUID IN (SELECT d.MENU_ID from desk d WHERE d.USER_ID = 1) THEN 'checked'     
+		 ELSE '' END) `CHECK`
+	</sql>
+	<!-- 根据条件查询 -->
+	<select id="findRightById" parameterType="java.lang.Integer" resultMap="menuRM">
+		SELECT * FROM menu where MENUID in #{   
+		    SELECT MENU_ID from role_menu where ROLE_ID in #{
+            SELECT ROLE_ID FROM user_role WHERE USER_ID=#{
+            id,jdbcType=INTEGER},jdbcType=INTEGER},jdbcType=INTEGER}
+       
+	</select>
+	<!-- 根据权限查询用户菜单 -->
+	<select id="findMenuList" parameterType="map" resultMap="menuRM">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM `menu` t
+		ORDER BY t.PARENTMENU
+	</select>
+	<!-- 根据权限查询报表菜单 -->
+	<select id="findMenuRList" parameterType="map" resultMap="menuRM">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM `menu_report` t
+		ORDER BY t.PARENTMENU
+	</select>
+	<!-- 查询用户工作台 -->
+	<select id="findMenuDesk" parameterType="map" resultMap="menuRM">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM `menu` t
+		where 1 = 1
+		<if test="userid != null">
+			and MENUID in (SELECT MENU_ID FROM `desk` where USER_ID = #{userid,jdbcType=VARCHAR})
+		</if>
+	</select>
+	<!-- 根据条件查询 -->
+	<select id="findByCondition" parameterType="map" resultMap="menuRM">
+		select
+		<include refid="Base_Column_List" />
+		from MENU
+		where 1=1
+		<if test="menuid != null">
+			and MENUID = #{menuid,jdbcType=VARCHAR}
+		</if>
+		<if test="menuname != null">
+			and MENUNAME = #{menuname,jdbcType=VARCHAR}
+		</if>
+		<if test="url != null">
+			and URL = #{url,jdbcType=VARCHAR}
+		</if>
+		<if test="parentmenu != null">
+			and PARENTMENU = #{parentmenu,jdbcType=VARCHAR}
+		</if>
+		<if test="icon != null">
+			and ICON = #{icon,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 查询menureport -->
+	<select id="findReport" parameterType="map" resultType="map">
+		select *, (@i:=@i+1) num
+		from menu_report,(select @i:=0) it 
+		where 1=1 and  left(PARENTMENU,1) not in ('-')
+		<if test="menuid != null">
+			and MENUID = #{menuid,jdbcType=VARCHAR}
+		</if>
+		<if test="menuname != null">
+			and MENUNAME = #{menuname,jdbcType=VARCHAR}
+		</if>
+		<if test="url != null">
+			and URL = #{url,jdbcType=VARCHAR}
+		</if>
+		<if test="parentmenu != null">
+			and PARENTMENU = #{parentmenu,jdbcType=VARCHAR}
+		</if>
+		<if test="icon != null">
+			and ICON = #{icon,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 根据表查询tag -->
+	<select id="findMenuReportList" parameterType="map" resultMap="menuRM">
+		SELECT
+		*,(CASE WHEN m.MENUID IN (SELECT t.TARGET_ID from table_tag t WHERE t.ORIGINAL_ID = #{originalid}) THEN 'checked'
+		ELSE '' END) `CHECK`
+		FROM menu_report m
+		WHERE 1=1
+		<if test="originalid != null">
+			and  MENUID not in (#{originalid})
+		</if>
+		ORDER BY m.PARENTMENU
+	</select>
+	<!-- 查询tag -->
+	<select id="findMenuReportTag" parameterType="map" resultMap="menuRM">
+ 		SELECT
+		*,(CASE WHEN m.MENUID IN (SELECT t.TARGET_ID from table_tag t WHERE t.ORIGINAL_ID = #{originalid}) THEN 'checked'
+		ELSE '' END) `CHECK`
+		FROM menu_report m
+		where 1=1
+		<if test="originalid != null">
+			and MENUID in (SELECT TARGET_ID FROM table_tag where ORIGINAL_ID = #{originalid})
+		</if>
+	</select>
+	<!-- <select id="findById" resultMap="menuRM" parameterType="java.lang.String"> 
+		select <include refid="Base_Column_List" /> from MENU where MENUID = #{menuid,jdbcType=VARCHAR} 
+		</select> -->
+	<!-- 按原表ID删除tag -->
+	<delete id="deleteUserTag" parameterType="java.lang.Integer">
+		delete from table_tag
+		where
+		ORIGINAL_ID = #{originalid}
+	</delete>
+	<!-- 按原表ID添加tag -->
+	<insert id="setUserTag" parameterType="map">
+		insert into
+		table_tag(ORIGINAL_ID,TARGET_ID)
+		values(#{originalid},#{targetid})
+	</insert>
+	<select id="findById" resultMap="menuRM" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from MENU
+		where MENUID = #{menuid,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteUserDesk" parameterType="java.lang.String">
+		delete from desk where USER_ID = #{userid,jdbcType=VARCHAR}
+	</delete>
+	<insert id="setUserDesk" parameterType="map">
+		insert into desk(USER_ID,MENU_ID) values(#{userid,jdbcType=VARCHAR},#{menuid,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="deleteRoleMenu" parameterType="java.lang.String">
+		delete from role_menu where ROLE_ID = #{roleid,jdbcType=VARCHAR}
+	</delete>
+	<insert id="setRoleMenu" parameterType="map">
+		insert into role_menu(ROLE_ID,MENU_ID) values(#{roleid,jdbcType=VARCHAR},#{menuid,jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="insert" parameterType="Menu">
+		insert into MENU
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="menuid != null">
+				MENUID,
+			</if>
+			<if test="menuname != null">
+				MENUNAME,
+			</if>
+			<if test="url != null">
+				URL,
+			</if>
+			<if test="parentmenu != null">
+				PARENTMENU,
+			</if>
+			<if test="icon != null">
+				ICON,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="menuid != null">
+				#{menuid,jdbcType=VARCHAR},
+			</if>
+			<if test="menuname != null">
+				#{menuname,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="parentmenu != null">
+				#{parentmenu,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				#{ICON,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="Menu">
+		update MENU
+		<set>
+			<if test="menuname != null">
+				MENUNAME = #{menuname,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				URL = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="parentmenu != null">
+				PARENTMENU = #{parentmenu,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				ICON = #{icon,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where MENUID = #{menuid,jdbcType=VARCHAR}
+	</update>
+</mapper>

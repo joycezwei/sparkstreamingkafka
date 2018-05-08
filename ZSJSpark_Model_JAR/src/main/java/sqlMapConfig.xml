@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<!-- PO对象别名配置 -->
+	<typeAliases>
+		<typeAlias
+			type="com.st.zsjspark.model.Item"
+			alias="Item" />
+		<typeAlias
+			type="com.st.zsjspark.model.Group"
+			alias="Group" />
+		<typeAlias
+			type="com.st.zsjspark.model.MachineHistory"
+			alias="MachineHistory" />
+		<typeAlias
+			type="com.st.zsjspark.model.Machine"
+			alias="Machine" />
+		<typeAlias
+			type="com.st.zsjspark.model.Menu"
+			alias="Menu" />
+		<typeAlias
+			type="com.st.zsjspark.model.MachineObject"
+			alias="MachineObject" />
+		<typeAlias
+			type="com.st.zsjspark.model.Machine"
+			alias="Machine" />
+		<typeAlias
+			type="com.st.zsjspark.model.Workshop"
+			alias="Workshop" />
+		<typeAlias
+			type="com.st.zsjspark.model.Workset"
+			alias="Workset" />
+		<!-- <typeAlias type="com.st.zsjspark.model.Change" alias="Change"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Craft" alias="Craft"/> -->
+
+		<!-- <typeAlias type="com.st.zsjspark.model.Material" alias="Material"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Model" alias="Model"/> -->
+		<typeAlias type="com.st.zsjspark.model.Original" alias="Original"/>
+		<!-- <typeAlias type="com.st.zsjspark.model.Paint" alias="Paint"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.ProduceTask" alias="ProduceTask"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Role" alias="Role"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Subtask" alias="Subtask"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.RealTimeStatus" alias="RealTimeStatus"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.User" alias="User"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.UserRole" alias="UserRole"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Warning" alias="Warning"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.WorkDetail" alias="WorkDetail"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.WorkWarning" alias="WorkWarning"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.DayDetail" alias="DayDetail"/> -->
+
+
+		<!-- <typeAlias type="com.st.zsjspark.model.OPCServer" alias="OPCServer"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.EngineConfig" alias="EngineConfig"/> -->
+
+
+		<!-- <typeAlias type="com.st.zsjspark.model.SoftVersion" alias="SoftVersion"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Topic" alias="Topic"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.ProductionCard" alias="ProductionCard"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Energy" alias="Energy"/> -->
+		<typeAlias type="com.st.zsjspark.model.MachineGroup" alias="MachineGroup"/>
+		<!-- <typeAlias type="com.st.zsjspark.model.Product" alias="Product"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Useproduct" alias="Useproduct"/> -->
+		<!-- <typeAlias type="com.st.zsjspark.model.Starffer" alias="Starffer"/> -->
+	</typeAliases>
+
+</configuration>

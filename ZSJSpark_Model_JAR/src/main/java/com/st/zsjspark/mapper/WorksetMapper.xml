@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.st.zsjspark.mapper.WorksetMapper">
+	<resultMap id="worksetRM" type="Workset">
+		<id column="WORKSETID" property="worksetid" jdbcType="VARCHAR" />
+		<result column="WORKSETNAME" property="worksetname" jdbcType="VARCHAR" />
+		<result column="CONTEXT" property="context" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		WORKSETID, WORKSETNAME, CONTEXT
+	</sql>
+	<select id="findByCondition" parameterType="map" resultMap="worksetRM">
+		select
+		<include refid="Base_Column_List" />
+		from WORKSET
+		where 1=1
+		<if test="worksetid != null">
+			and WORKSETID = #{worksetid,jdbcType=VARCHAR}
+		</if>
+		<if test="worksetname != null">
+			and WORKSETNAME = #{worksetname,jdbcType=VARCHAR}
+		</if>
+		<if test="context != null">
+			and CONTEXT = #{context,jdbcType=VARCHAR}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+	</select>
+	<select id="findById" resultMap="worksetRM" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from workset
+		where WORKSETID = #{worksetid,jdbcType=VARCHAR}
+	</select>
+	<select id="" parameterType="map" resultMap="worksetRM">
+		select
+		<include refid="Base_Column_List" />
+		from workset
+		where 1=1
+		<if test="worksetid != null">
+			and WORKSETID = #{worksetid,jdbcType=VARCHAR}
+		</if>
+		<if test="worksetname != null">
+			and WORKSETNAME = #{worksetname,jdbcType=VARCHAR}
+		</if>
+		<if test="context != null">
+			and CONTEXT = #{context,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<delete id="delete" parameterType="java.lang.String">
+		delete from workset
+		where WORKSETID = #{worksetid,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="Workset">
+		insert into workset
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="worksetid != null">
+				WORKSETID,
+			</if>
+			<if test="worksetname != null">
+				WORKSETNAME,
+			</if>
+			<if test="context != null">
+				CONTEXT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="worksetid != null">
+				#{worksetid,jdbcType=VARCHAR},
+			</if>
+			<if test="worksetname != null">
+				#{worksetname,jdbcType=VARCHAR},
+			</if>
+			<if test="context != null">
+				#{context,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="Workset">
+		update workset
+		<set>
+			<if test="worksetname != null">
+				WORKSETNAME = #{worksetname,jdbcType=VARCHAR},
+			</if>
+			<if test="context != null">
+				CONTEXT = #{context,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where WORKSETID = #{worksetid,jdbcType=VARCHAR}
+	</update>
+</mapper>

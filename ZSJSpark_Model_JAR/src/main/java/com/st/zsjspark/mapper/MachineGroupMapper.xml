@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.st.zsjspark.mapper.MachineGroupMapper" >
+  <resultMap id="machinegroupRM" type="MachineGroup" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="GROUP_ID" property="groupId" jdbcType="INTEGER" />
+    <result column="MACHINE_CODE" property="machineCode" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="BIGINT" />
+    <result column="EXTEND" property="extend" jdbcType="VARCHAR" />
+    <result column="EXTEND1" property="extend1" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GROUP_ID, MACHINE_CODE, UPDATE_TIME, EXTEND, EXTEND1, STATUS
+  </sql>
+
+
+  <select id="findById" resultMap="machinegroupRM" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from machine_group
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+  
+  
+  <!-- 根据条件查询 -->
+	<select id="findByCondition" parameterType="map" resultMap="machinegroupRM">
+		select * from machine_group where 1=1
+		<if test="id != null">
+			and ID=#{id,jdbcType=INTEGER}
+		</if>
+		<if test="groupId != null">
+			and GROUP_ID = #{groupId,jdbcType=INTEGER}
+		</if>
+		<if test="machineCode != null">
+			and MACHINE_CODE = #{machineCode,jdbcType=VARCHAR}
+		</if>
+		<if test="updateTime != null">
+			and UPDATE_TIME = #{updateTime,jdbcType=BIGINT}
+		</if>
+		<if test="extend != null">
+			and EXTEND = #{extend,jdbcType=VARCHAR}
+		</if>
+		<if test="extend1 != null">
+			and EXTEND1 = #{extend1,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			and STATUS = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+	</select>
+	
+	<!-- 根据条件计数 -->
+	<select id="countByCondition" parameterType="map" resultType="java.lang.Integer">
+		select count(*) from machine_group where 1=1
+		<if test="id != null">
+			and ID=#{id,jdbcType=INTEGER}
+		</if>
+		<if test="groupId != null">
+			and GROUP_ID = #{groupId,jdbcType=INTEGER}
+		</if>
+		<if test="machineCode != null">
+			and MACHINE_CODE = #{machineCode,jdbcType=VARCHAR}
+		</if>
+		<if test="updateTime != null">
+			and UPDATE_TIME = #{updateTime,jdbcType=BIGINT}
+		</if>
+		<if test="extend != null">
+			and EXTEND = #{extend,jdbcType=VARCHAR}
+		</if>
+		<if test="extend1 != null">
+			and EXTEND1 = #{extend1,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			and STATUS = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+	</select>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		 delete from machine_group
+		where ID in
+		<foreach collection="array" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>    
+	</delete>
+  
+  
+  
+
+  <insert id="insert" parameterType="MachineGroup" >
+    insert into machine_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID,
+      </if>
+      <if test="machineCode != null" >
+        MACHINE_CODE,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="extend != null" >
+        EXTEND,
+      </if>
+      <if test="extend1 != null" >
+        EXTEND1,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="machineCode != null" >
+        #{machineCode,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="extend != null" >
+        #{extend,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null" >
+        #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="MachineGroup" >
+    update machine_group
+    <set >
+      <if test="groupId != null" >
+        GROUP_ID = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="machineCode != null" >
+        MACHINE_CODE = #{machineCode,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="extend != null" >
+        EXTEND = #{extend,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null" >
+        EXTEND1 = #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

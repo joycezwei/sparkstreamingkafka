@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.st.zsjspark.mapper.OriginalMapper">
+	<resultMap id="originalRM" type="Original">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="MACHINE_CODE" property="machineCode" jdbcType="VARCHAR" />
+		<result column="KEY_" property="key" jdbcType="VARCHAR" />
+		<result column="VALUE" property="value" jdbcType="VARCHAR" />
+		<result column="TIME" property="time" jdbcType="BIGINT" />
+		<result column="GROUP_ID" property="groupId" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, MACHINE_CODE, KEY_, VALUE, TIME ,GROUP_ID
+	</sql>
+	<select id="findById" resultMap="originalRM" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from original
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 根据条件查询 -->
+	<select	id="findByCondition" parameterType="map" resultMap="originalRM">
+		select * from original where 1=1
+		<if test="id != null">
+			and ID=#{id,jdbcType=INTEGER}
+		</if>
+		<if test="machineCode != null">
+			and MACHINE_CODE = #{machineCode,jdbcType=VARCHAR}
+		</if>
+		<if test="key != null">
+			and KEY_ = #{key,jdbcType=VARCHAR}
+		</if>
+		<if test="value != null">
+			and VALUE = #{value,jdbcType=VARCHAR}
+		</if>
+		<if test="time != null">
+			and TIME = #{time,jdbcType=BIGINT}
+		</if>
+		<if test="groupId != null">
+			and GROUP_ID = #{groupId,jdbcType=INTEGER}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+		ORDER BY TIME
+	</select>
+	
+	<!-- 根据条件查询 -->
+	<select	id="findByConditionOld" parameterType="map" resultMap="originalRM">
+		select * from original_bak where 1=1
+		<if test="groupId != null">
+			and GROUP_ID = #{groupId,jdbcType=INTEGER}
+		</if>
+		ORDER BY TIME
+	</select>
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from original
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="Original">
+		insert into original
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="machineCode != null">
+				MACHINE_CODE,
+			</if>
+			<if test="key != null">
+				KEY_,
+			</if>
+			<if test="value != null">
+				VALUE,
+			</if>
+			<if test="time != null">
+				TIME,
+			</if>
+			<if test="groupId != null">
+				GROUP_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="machineCode != null">
+				#{machineCode,jdbcType=VARCHAR},
+			</if>
+			<if test="key != null">
+				#{key,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=BIGINT},
+			</if>
+			<if test="groupId != null">
+			    #{groupId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<insert id="batchInsertOriginal" parameterType="java.util.List">  
+      insert into original (MACHINE_CODE,KEY_,VALUE,TIME,GROUP_ID) values
+   		 <foreach collection="list" item="item" index="index" separator="," >  
+        	(#{item.machineCode},#{item.key},#{item.value},#{item.time},#{item.groupId})  
+       	 </foreach>  
+	</insert>
+	
+	<update id="update" parameterType="Original">
+		update original
+		<set>
+			<if test="machineCode != null">
+				MACHINE_CODE = #{machineCode,jdbcType=VARCHAR},
+			</if>
+			<if test="key != null">
+				KEY_ = #{key,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				VALUE = #{value,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				TIME = #{time,jdbcType=BIGINT},
+			</if>
+			<if test="groupId != null">
+				GROUP_ID = #{groupId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>

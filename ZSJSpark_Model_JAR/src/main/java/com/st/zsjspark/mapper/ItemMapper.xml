@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.st.zsjspark.mapper.ItemMapper" >
+  <resultMap id="itemRM" type="Item" >
+    <id column="ITEM_ID" property="itemId" jdbcType="INTEGER" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="PARAMETER_NAME" property="parameterName" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="INTEGER" />
+    <result column="CREATE_PEOPLE" property="createPeople" jdbcType="INTEGER" />
+    <result column="CHANGED_DATE" property="changedDate" jdbcType="BIGINT" />
+    <result column="CHANGE_PEOPLE" property="changePeople" jdbcType="INTEGER" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="BIGINT" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="DELETE_DATE" property="deleteDate" jdbcType="BIGINT" />
+    <result column="DELETE_PEOPLE" property="deletePeople" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ITEM_ID, ITEM_NAME, PARAMETER_NAME, GROUP_ID, CREATE_PEOPLE, CHANGED_DATE, CHANGE_PEOPLE, 
+    CREATE_DATE, STATUS, DELETE_DATE, DELETE_PEOPLE
+  </sql>
+  
+  <select id="findById" resultMap="itemRM" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from item
+    where ITEM_ID = #{itemId,jdbcType=INTEGER}
+  </select>
+  
+  <!--  -->
+	<select id="findByCondition" parameterType="map" resultMap="itemRM">
+		select * from item where STATUS != 0
+		<if test="itemId != null">
+			and ITEM_ID = #{itemId,jdbcType=INTEGER}
+		</if>
+		<if test="itemName != null">
+			and ITEM_NAME = #{itemName,jdbcType=VARCHAR}
+		</if>
+		<if test="parameterName != null">
+			and PARAMETER_NAME = #{parameterName,jdbcType=VARCHAR}
+		</if>
+		<if test="groupId != null">
+			and GROUP_ID = #{groupId,jdbcType=INTEGER}
+		</if>
+		<if test="createPeople != null">
+			and CREATE_PEOPLE = #{createPeople,jdbcType=INTEGER}
+		</if>
+		<if test="changedDate != null">
+			and CHANGED_DATE = #{changedDate,jdbcType=BIGINT}
+		</if>
+		<if test="changePeople != null">
+			and CHANGE_PEOPLE = #{changePeople,jdbcType=INTEGER}
+		</if>
+		<if test="createDate != null">
+			and CREATE_DATE = #{createDate,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			and STATUS = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="deleteDate != null">
+			and DELETE_DATE = #{deleteDate,jdbcType=BIGINT}
+		</if>
+		<if test="deletePeople != null">
+			and DELETE_PEOPLE = #{deletePeople,jdbcType=INTEGER}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+	</select>
+	
+	<delete id="deleteByCondition" parameterType="map">
+		delete from item where 1=0
+		<if test="itemId != null">
+			or ITEM_ID = #{itemId,jdbcType=INTEGER}
+		</if>
+		<if test="itemName != null">
+			or ITEM_NAME = #{itemName,jdbcType=VARCHAR}
+		</if>
+		<if test="parameterName != null">
+			or PARAMETER_NAME = #{parameterName,jdbcType=VARCHAR}
+		</if>
+		<if test="groupId != null">
+			or GROUP_ID = #{groupId,jdbcType=INTEGER}
+		</if>
+		<if test="createPeople != null">
+			or CREATE_PEOPLE = #{createPeople,jdbcType=INTEGER}
+		</if>
+		<if test="changedDate != null">
+			or CHANGED_DATE = #{changedDate,jdbcType=BIGINT}
+		</if>
+		<if test="changePeople != null">
+			or CHANGE_PEOPLE = #{changePeople,jdbcType=INTEGER}
+		</if>
+		<if test="createDate != null">
+			or CREATE_DATE = #{createDate,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			or STATUS = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="deleteDate != null">
+			or DELETE_DATE = #{deleteDate,jdbcType=BIGINT}
+		</if>
+		<if test="deletePeople != null">
+			or DELETE_PEOPLE = #{deletePeople,jdbcType=INTEGER}
+		</if>
+		<if test="startNum != null">
+			limit #{startNum},#{endNum}
+		</if>
+	</delete>
+  
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from item
+    where ITEM_ID = #{itemId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="Item" >
+    insert into item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        ITEM_ID,
+      </if>
+      <if test="itemName != null" >
+        ITEM_NAME,
+      </if>
+      <if test="parameterName != null" >
+        PARAMETER_NAME,
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID,
+      </if>
+      <if test="createPeople != null" >
+        CREATE_PEOPLE,
+      </if>
+      <if test="changedDate != null" >
+        CHANGED_DATE,
+      </if>
+      <if test="changePeople != null" >
+        CHANGE_PEOPLE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="deleteDate != null" >
+        DELETE_DATE,
+      </if>
+      <if test="deletePeople != null" >
+        DELETE_PEOPLE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterName != null" >
+        #{parameterName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="createPeople != null" >
+        #{createPeople,jdbcType=INTEGER},
+      </if>
+      <if test="changedDate != null" >
+        #{changedDate,jdbcType=BIGINT},
+      </if>
+      <if test="changePeople != null" >
+        #{changePeople,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deleteDate != null" >
+        #{deleteDate,jdbcType=BIGINT},
+      </if>
+      <if test="deletePeople != null" >
+        #{deletePeople,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="Item" >
+    update item
+    <set >
+      <if test="itemName != null" >
+        ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterName != null" >
+        PARAMETER_NAME = #{parameterName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="createPeople != null" >
+        CREATE_PEOPLE = #{createPeople,jdbcType=INTEGER},
+      </if>
+      <if test="changedDate != null" >
+        CHANGED_DATE = #{changedDate,jdbcType=BIGINT},
+      </if>
+      <if test="changePeople != null" >
+        CHANGE_PEOPLE = #{changePeople,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deleteDate != null" >
+        DELETE_DATE = #{deleteDate,jdbcType=BIGINT},
+      </if>
+      <if test="deletePeople != null" >
+        DELETE_PEOPLE = #{deletePeople,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ITEM_ID = #{itemId,jdbcType=INTEGER}
+  </update>
+ 
+</mapper>
